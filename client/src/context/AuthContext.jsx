@@ -5,10 +5,11 @@ const AuthContext = createContext();
 export const AuthProvider = ({ children }) => {
   const [user, setUser] = useState(null);
 
-  // Clear any old saved session every time the app starts fresh
+  // Every time the app is freshly opened, clear any old saved session
   useEffect(() => {
     localStorage.removeItem('user');
     localStorage.removeItem('token');
+    setUser(null);
   }, []);
 
   const login = (userData) => {

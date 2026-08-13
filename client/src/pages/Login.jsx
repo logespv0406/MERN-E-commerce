@@ -16,12 +16,7 @@ const Login = () => {
     try {
       const res = await API.post('/auth/login', { email, password });
       login(res.data);
-
-      if (res.data.isAdmin) {
-        navigate('/admin/products');
-      } else {
-        navigate('/');
-      }
+      navigate('/');
     } catch (err) {
       setError(err.response?.data?.message || 'Something went wrong');
     }
