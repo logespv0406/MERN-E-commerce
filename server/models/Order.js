@@ -33,7 +33,12 @@ const orderSchema = new mongoose.Schema({
     enum: ['Pending', 'Processing', 'Shipped', 'Delivered', 'Cancelled'],
     default: 'Pending',
   },
-  // New payment fields
+  paymentMethod: {
+    type: String,
+    enum: ['COD', 'Razorpay'],
+    required: true,
+    default: 'COD',
+  },
   isPaid: {
     type: Boolean,
     default: false,

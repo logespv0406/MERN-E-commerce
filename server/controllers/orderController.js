@@ -47,11 +47,12 @@ export const placeOrder = async (req, res) => {
     }
 
     const order = await Order.create({
-      user: req.user._id,
-      items: orderItems,
-      totalAmount,
-      shippingAddress,
-    });
+  user: req.user._id,
+  items: orderItems,
+  totalAmount,
+  shippingAddress,
+  paymentMethod: 'COD',
+});
 
     // Clear the cart after order is placed
     cart.items = [];
@@ -212,15 +213,16 @@ export const verifyPaymentAndPlaceOrder = async (req, res) => {
     }
 
     const order = await Order.create({
-      user: req.user._id,
-      items: orderItems,
-      totalAmount,
-      shippingAddress,
-      isPaid: true,
-      paidAt: new Date(),
-      razorpayOrderId: razorpay_order_id,
-      razorpayPaymentId: razorpay_payment_id,
-    });
+  user: req.user._id,
+  items: orderItems,
+  totalAmount,
+  shippingAddress,
+  paymentMethod: 'Razorpay',
+  isPaid: true,
+  paidAt: new Date(),
+  razorpayOrderId: razorpay_order_id,
+  razorpayPaymentId: razorpay_payment_id,
+});
 
     cart.items = [];
     await cart.save();

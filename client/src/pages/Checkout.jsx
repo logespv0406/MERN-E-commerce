@@ -11,6 +11,7 @@ const Checkout = () => {
   const [city, setCity] = useState('');
   const [postalCode, setPostalCode] = useState('');
   const [country, setCountry] = useState('');
+  const [paymentMethod, setPaymentMethod] = useState('Razorpay');
   const [error, setError] = useState('');
   const [loading, setLoading] = useState(false);
   const navigate = useNavigate();
@@ -20,11 +21,20 @@ const Checkout = () => {
     0
   );
 
-  const handlePayment = async (e) => {
-    e.preventDefault();
-    setError('');
-    setLoading(true);
+  const handleCodOrder = async () => {
+    try {
+      const res = await API.post('/orders', {
+        shippingAddress: { street, city, postalCode, country },
+      });
+      await fetchCart();
+      navigate(`/orders/${res.data._id}`);
+    } catch (err) {
+      setError(err.response?.data?.message || 'Something went wrong');
+      setLoading(false);
+    }
+  };
 
+  const handleRazorpayPayment = async () => {
     try {
       const { data } = await API.post('/orders/razorpay/create');
 
@@ -32,7 +42,7 @@ const Checkout = () => {
         key: data.keyId,
         amount: data.amount,
         currency: data.currency,
-        name: 'MyShop',
+        name: 'Kastra',
         description: 'Order Payment',
         order_id: data.razorpayOrderId,
         handler: async function (response) {
@@ -72,6 +82,19 @@ const Checkout = () => {
     }
   };
 
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    setError('');
+    setLoading(true);
+
+    if (paymentMethod === 'COD') {
+      await handleCodOrder();
+      setLoading(false);
+    } else {
+      await handleRazorpayPayment();
+    }
+  };
+
   if (cart.items.length === 0) {
     return (
       <div className="min-h-screen bg-neutral-50 py-20 px-6 text-center">
@@ -104,7 +127,7 @@ const Checkout = () => {
           </div>
         </div>
 
-        <form onSubmit={handlePayment} className="bg-white border border-neutral-200 p-6">
+        <form onSubmit={handleSubmit} className="bg-white border border-neutral-200 p-6">
           <h2 className="text-xs uppercase tracking-widest text-neutral-500 mb-4">
             Shipping address
           </h2>
@@ -143,12 +166,46 @@ const Checkout = () => {
             required
           />
 
+          <h2 className="text-xs uppercase tracking-widest text-neutral-500 mb-4">
+            Payment method
+          </h2>
+
+          <div className="flex flex-col gap-3 mb-6">
+            <label className="flex items-center gap-3 border border-neutral-300 px-4 py-3 cursor-pointer has-[:checked]:border-neutral-900 transition-colors duration-300">
+              <input
+                type="radio"
+                name="paymentMethod"
+                value="Razorpay"
+                checked={paymentMethod === 'Razorpay'}
+                onChange={(e) => setPaymentMethod(e.target.value)}
+                className="accent-neutral-900"
+              />
+              <span className="text-sm text-neutral-800">Pay online (Card / UPI / Netbanking)</span>
+            </label>
+
+            <label className="flex items-center gap-3 border border-neutral-300 px-4 py-3 cursor-pointer has-[:checked]:border-neutral-900 transition-colors duration-300">
+              <input
+                type="radio"
+                name="paymentMethod"
+                value="COD"
+                checked={paymentMethod === 'COD'}
+                onChange={(e) => setPaymentMethod(e.target.value)}
+                className="accent-neutral-900"
+              />
+              <span className="text-sm text-neutral-800">Cash on delivery</span>
+            </label>
+          </div>
+
           <button
             type="submit"
             disabled={loading}
             className="w-full bg-neutral-900 text-white py-3 text-xs uppercase tracking-widest hover:bg-neutral-800 transition-colors duration-300 disabled:opacity-50"
           >
-            {loading ? 'Processing...' : `Pay ₹${total}`}
+            {loading
+              ? 'Processing...'
+              : paymentMethod === 'COD'
+              ? `Place order (₹${total})`
+              : `Pay ₹${total}`}
           </button>
         </form>
       </div>
