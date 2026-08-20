@@ -17,17 +17,17 @@ const Navbar = () => {
   };
 
   return (
-    <nav className="bg-white border-b border-neutral-200 px-6 md:px-10 py-5 flex justify-between items-center">
-      <Link to="/" className="flex items-center gap-2">
+    <nav className="bg-white border-b border-neutral-200 px-4 sm:px-6 md:px-10 py-4 sm:py-5 flex flex-wrap justify-between items-center gap-y-3">
+      <Link to="/" className="flex items-center gap-2 shrink-0">
         <svg width="28" height="28" viewBox="0 0 72 72">
           <rect x="1" y="1" width="70" height="70" fill="none" stroke="#1a1a1a" strokeWidth="1" />
           <text x="36" y="47" textAnchor="middle" fontFamily="'Playfair Display', Georgia, serif" fontSize="34" fill="#1a1a1a">K</text>
         </svg>
-        <span className="font-serif text-2xl tracking-wide text-neutral-900">Kastra</span>
+        <span className="font-serif text-xl sm:text-2xl tracking-wide text-neutral-900">Kastra</span>
       </Link>
 
       {!isAuthPage && (
-        <div className="flex items-center gap-8">
+        <div className="flex items-center gap-4 sm:gap-8 flex-wrap justify-end w-full sm:w-auto">
           <Link
             to="/"
             className="text-xs uppercase tracking-widest text-neutral-500 hover:text-neutral-900 transition-colors duration-300"
