@@ -11,11 +11,10 @@ import orderRoutes from './routes/orderRoutes.js';
 
 const app = express();
 
-app.use(cors(
-  {
-    origin: 'https://mern-e-commerce-jade.vercel.app'
-  }
-));
+app.use(cors({
+  origin: ["http://localhost:5173", "https://mern-e-commerce-jade.vercel.app"],
+  credentials: true
+}));
 app.use(express.json());
 
 app.get('/', (req, res) => {

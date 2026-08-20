@@ -33,6 +33,20 @@ const orderSchema = new mongoose.Schema({
     enum: ['Pending', 'Processing', 'Shipped', 'Delivered', 'Cancelled'],
     default: 'Pending',
   },
+  // New payment fields
+  isPaid: {
+    type: Boolean,
+    default: false,
+  },
+  paidAt: {
+    type: Date,
+  },
+  razorpayOrderId: {
+    type: String,
+  },
+  razorpayPaymentId: {
+    type: String,
+  },
 }, { timestamps: true });
 
 const Order = mongoose.model('Order', orderSchema);

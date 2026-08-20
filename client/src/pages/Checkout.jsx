@@ -2,9 +2,11 @@ import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import API from '../api/axios';
 import { useCart } from '../context/CartContext';
+import { useAuth } from '../context/AuthContext';
 
 const Checkout = () => {
   const { cart, fetchCart } = useCart();
+  const { user } = useAuth();
   const [street, setStreet] = useState('');
   const [city, setCity] = useState('');
   const [postalCode, setPostalCode] = useState('');
@@ -18,20 +20,57 @@ const Checkout = () => {
     0
   );
 
-  const handlePlaceOrder = async (e) => {
+  const handlePayment = async (e) => {
     e.preventDefault();
     setError('');
     setLoading(true);
 
     try {
-      const res = await API.post('/orders', {
-        shippingAddress: { street, city, postalCode, country },
-      });
-      await fetchCart(); // refresh cart (should now be empty)
-      navigate(`/orders/${res.data._id}`);
+      // Step 1: Ask backend to create a Razorpay order
+      const { data } = await API.post('/orders/razorpay/create');
+
+      // Step 2: Configure and open Razorpay's popup
+      const options = {
+        key: data.keyId,
+        amount: data.amount,
+        currency: data.currency,
+        name: 'MyShop',
+        description: 'Order Payment',
+        order_id: data.razorpayOrderId,
+        handler: async function (response) {
+          // Step 3: This runs ONLY after successful payment
+          try {
+            const verifyRes = await API.post('/orders/razorpay/verify', {
+              razorpay_order_id: response.razorpay_order_id,
+              razorpay_payment_id: response.razorpay_payment_id,
+              razorpay_signature: response.razorpay_signature,
+              shippingAddress: { street, city, postalCode, country },
+            });
+
+            await fetchCart();
+            navigate(`/orders/${verifyRes.data._id}`);
+          } catch (err) {
+            setError('Payment succeeded but order verification failed. Contact support.');
+          }
+        },
+        prefill: {
+          name: user?.name,
+          email: user?.email,
+        },
+        theme: {
+          color: '#3b82f6',
+        },
+        modal: {
+          ondismiss: function () {
+            setLoading(false);
+          },
+        },
+      };
+
+      const razorpayInstance = new window.Razorpay(options);
+      razorpayInstance.open();
     } catch (err) {
       setError(err.response?.data?.message || 'Something went wrong');
-    } finally {
       setLoading(false);
     }
   };
@@ -63,7 +102,7 @@ const Checkout = () => {
           </div>
         </div>
 
-        <form onSubmit={handlePlaceOrder} className="bg-white p-4 rounded-lg shadow-sm">
+        <form onSubmit={handlePayment} className="bg-white p-4 rounded-lg shadow-sm">
           <h2 className="font-semibold mb-3">Shipping Address</h2>
           {error && <p className="text-red-500 text-sm mb-3">{error}</p>}
 
@@ -105,7 +144,7 @@ const Checkout = () => {
             disabled={loading}
             className="w-full bg-blue-500 text-white py-2 rounded hover:bg-blue-600 transition disabled:opacity-50"
           >
-            {loading ? 'Placing Order...' : 'Place Order'}
+            {loading ? 'Processing...' : `Pay ₹${total}`}
           </button>
         </form>
       </div>
