@@ -24,16 +24,16 @@ const Signup = () => {
   };
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-gray-100">
-      <form onSubmit={handleSubmit} className="bg-white p-8 rounded-lg shadow-md w-full max-w-sm">
-        <h2 className="text-2xl font-bold mb-6 text-center">Sign Up</h2>
-        {error && <p className="text-red-500 mb-4 text-sm">{error}</p>}
+    <div className="min-h-screen flex items-center justify-center bg-neutral-50 px-6">
+      <form onSubmit={handleSubmit} className="bg-white border border-neutral-200 p-10 w-full max-w-sm">
+        <h2 className="font-serif text-3xl text-neutral-900 text-center mb-8">Sign up</h2>
+        {error && <p className="text-red-500 text-sm mb-4 text-center">{error}</p>}
         <input
           type="text"
           placeholder="Name"
           value={name}
           onChange={(e) => setName(e.target.value)}
-          className="w-full border border-gray-300 p-2 rounded mb-4 focus:outline-none focus:ring-2 focus:ring-blue-400"
+          className="w-full border border-neutral-300 px-4 py-3 text-sm mb-3 focus:outline-none focus:border-neutral-900 transition-colors duration-300"
           required
         />
         <input
@@ -41,7 +41,7 @@ const Signup = () => {
           placeholder="Email"
           value={email}
           onChange={(e) => setEmail(e.target.value)}
-          className="w-full border border-gray-300 p-2 rounded mb-4 focus:outline-none focus:ring-2 focus:ring-blue-400"
+          className="w-full border border-neutral-300 px-4 py-3 text-sm mb-3 focus:outline-none focus:border-neutral-900 transition-colors duration-300"
           required
         />
         <input
@@ -49,14 +49,20 @@ const Signup = () => {
           placeholder="Password"
           value={password}
           onChange={(e) => setPassword(e.target.value)}
-          className="w-full border border-gray-300 p-2 rounded mb-6 focus:outline-none focus:ring-2 focus:ring-blue-400"
+          className="w-full border border-neutral-300 px-4 py-3 text-sm mb-6 focus:outline-none focus:border-neutral-900 transition-colors duration-300"
           required
         />
-        <button type="submit" className="w-full bg-blue-500 text-white py-2 rounded hover:bg-blue-600 transition">
-          Sign Up
+        <button
+          type="submit"
+          className="w-full bg-neutral-900 text-white py-3 text-xs uppercase tracking-widest hover:bg-neutral-800 transition-colors duration-300"
+        >
+          Sign up
         </button>
-        <p className="text-sm text-center mt-4">
-          Already have an account? <Link to="/login" className="text-blue-500 hover:underline">Login</Link>
+        <p className="text-xs text-center mt-6 text-neutral-500 tracking-wide">
+          Already have an account?{' '}
+          <Link to="/login" className="text-neutral-900 border-b border-neutral-900 pb-0.5 hover:text-neutral-600 hover:border-neutral-600 transition-colors duration-300">
+            Login
+          </Link>
         </p>
       </form>
     </div>

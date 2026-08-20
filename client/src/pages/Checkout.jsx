@@ -26,10 +26,8 @@ const Checkout = () => {
     setLoading(true);
 
     try {
-      // Step 1: Ask backend to create a Razorpay order
       const { data } = await API.post('/orders/razorpay/create');
 
-      // Step 2: Configure and open Razorpay's popup
       const options = {
         key: data.keyId,
         amount: data.amount,
@@ -38,7 +36,6 @@ const Checkout = () => {
         description: 'Order Payment',
         order_id: data.razorpayOrderId,
         handler: async function (response) {
-          // Step 3: This runs ONLY after successful payment
           try {
             const verifyRes = await API.post('/orders/razorpay/verify', {
               razorpay_order_id: response.razorpay_order_id,
@@ -58,7 +55,7 @@ const Checkout = () => {
           email: user?.email,
         },
         theme: {
-          color: '#3b82f6',
+          color: '#1a1a1a',
         },
         modal: {
           ondismiss: function () {
@@ -77,41 +74,48 @@ const Checkout = () => {
 
   if (cart.items.length === 0) {
     return (
-      <div className="min-h-screen bg-gray-100 py-10 px-6 text-center">
-        <p className="text-gray-500">Your cart is empty.</p>
+      <div className="min-h-screen bg-neutral-50 py-20 px-6 text-center">
+        <p className="text-neutral-400 text-sm tracking-wide">Your cart is empty.</p>
       </div>
     );
   }
 
   return (
-    <div className="min-h-screen bg-gray-100 py-10 px-6">
+    <div className="min-h-screen bg-neutral-50 py-16 px-6">
       <div className="max-w-lg mx-auto">
-        <h1 className="text-2xl font-bold mb-6">Checkout</h1>
+        <h1 className="font-serif text-3xl text-neutral-900 mb-10 text-center">Checkout</h1>
 
-        <div className="bg-white p-4 rounded-lg shadow-sm mb-6">
-          <h2 className="font-semibold mb-3">Order Summary</h2>
+        <div className="bg-white border border-neutral-200 p-6 mb-6">
+          <h2 className="text-xs uppercase tracking-widest text-neutral-500 mb-4">
+            Order summary
+          </h2>
           {cart.items.map((item) => (
-            <div key={item.product._id} className="flex justify-between text-sm text-gray-600 mb-1">
+            <div
+              key={item.product._id}
+              className="flex justify-between text-sm text-neutral-700 mb-2"
+            >
               <span>{item.product.name} x {item.quantity}</span>
               <span>₹{item.product.price * item.quantity}</span>
             </div>
           ))}
-          <div className="flex justify-between font-bold mt-3 pt-3 border-t">
+          <div className="flex justify-between text-neutral-900 font-medium mt-4 pt-4 border-t border-neutral-200">
             <span>Total</span>
             <span>₹{total}</span>
           </div>
         </div>
 
-        <form onSubmit={handlePayment} className="bg-white p-4 rounded-lg shadow-sm">
-          <h2 className="font-semibold mb-3">Shipping Address</h2>
-          {error && <p className="text-red-500 text-sm mb-3">{error}</p>}
+        <form onSubmit={handlePayment} className="bg-white border border-neutral-200 p-6">
+          <h2 className="text-xs uppercase tracking-widest text-neutral-500 mb-4">
+            Shipping address
+          </h2>
+          {error && <p className="text-red-500 text-sm mb-4">{error}</p>}
 
           <input
             type="text"
             placeholder="Street"
             value={street}
             onChange={(e) => setStreet(e.target.value)}
-            className="w-full border border-gray-300 p-2 rounded mb-3"
+            className="w-full border border-neutral-300 px-4 py-3 text-sm mb-3 focus:outline-none focus:border-neutral-900 transition-colors duration-300"
             required
           />
           <input
@@ -119,15 +123,15 @@ const Checkout = () => {
             placeholder="City"
             value={city}
             onChange={(e) => setCity(e.target.value)}
-            className="w-full border border-gray-300 p-2 rounded mb-3"
+            className="w-full border border-neutral-300 px-4 py-3 text-sm mb-3 focus:outline-none focus:border-neutral-900 transition-colors duration-300"
             required
           />
           <input
             type="text"
-            placeholder="Postal Code"
+            placeholder="Postal code"
             value={postalCode}
             onChange={(e) => setPostalCode(e.target.value)}
-            className="w-full border border-gray-300 p-2 rounded mb-3"
+            className="w-full border border-neutral-300 px-4 py-3 text-sm mb-3 focus:outline-none focus:border-neutral-900 transition-colors duration-300"
             required
           />
           <input
@@ -135,14 +139,14 @@ const Checkout = () => {
             placeholder="Country"
             value={country}
             onChange={(e) => setCountry(e.target.value)}
-            className="w-full border border-gray-300 p-2 rounded mb-4"
+            className="w-full border border-neutral-300 px-4 py-3 text-sm mb-6 focus:outline-none focus:border-neutral-900 transition-colors duration-300"
             required
           />
 
           <button
             type="submit"
             disabled={loading}
-            className="w-full bg-blue-500 text-white py-2 rounded hover:bg-blue-600 transition disabled:opacity-50"
+            className="w-full bg-neutral-900 text-white py-3 text-xs uppercase tracking-widest hover:bg-neutral-800 transition-colors duration-300 disabled:opacity-50"
           >
             {loading ? 'Processing...' : `Pay ₹${total}`}
           </button>

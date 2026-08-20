@@ -1,1 +1,13 @@
 @import "tailwindcss";
+
+@theme {
+  --font-serif: "Playfair Display", serif;
+}
+@keyframes loadbar {
+  0% { left: -40px; }
+  100% { left: 128px; }
+}
+
+.animate-loadbar {
+  animation: loadbar 1.4s ease-in-out infinite;
+}

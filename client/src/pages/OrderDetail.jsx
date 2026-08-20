@@ -19,35 +19,42 @@ const OrderDetail = () => {
     }
   };
 
-  if (!order) return <p className="text-center mt-10 text-gray-500">Loading...</p>;
+  if (!order)
+    return (
+      <p className="text-center mt-16 text-neutral-400 text-sm tracking-wide">Loading...</p>
+    );
 
   return (
-    <div className="min-h-screen bg-gray-100 py-10 px-6">
-      <div className="max-w-lg mx-auto bg-white p-6 rounded-lg shadow-sm">
-        <h1 className="text-2xl font-bold mb-2">Order Confirmed! 🎉</h1>
-        <p className="text-sm text-gray-500 mb-6">Order ID: {order._id}</p>
+    <div className="min-h-screen bg-neutral-50 py-16 px-6">
+      <div className="max-w-lg mx-auto bg-white border border-neutral-200 p-8">
+        <h1 className="font-serif text-3xl text-neutral-900 mb-2">Order confirmed</h1>
+        <p className="text-xs uppercase tracking-widest text-neutral-400 mb-6">
+          Order ID: {order._id}
+        </p>
 
-        <div className="mb-4">
-          <span className="inline-block bg-yellow-100 text-yellow-700 text-xs px-3 py-1 rounded-full">
+        <div className="mb-6">
+          <span className="inline-block text-[10px] uppercase tracking-widest border border-neutral-300 text-neutral-600 px-3 py-1">
             {order.status}
           </span>
         </div>
 
-        <h2 className="font-semibold mb-2">Items</h2>
+        <h2 className="text-xs uppercase tracking-widest text-neutral-500 mb-3">Items</h2>
         {order.items.map((item, idx) => (
-          <div key={idx} className="flex justify-between text-sm text-gray-600 mb-1">
+          <div key={idx} className="flex justify-between text-sm text-neutral-700 mb-2">
             <span>{item.name} x {item.quantity}</span>
             <span>₹{item.price * item.quantity}</span>
           </div>
         ))}
 
-        <div className="flex justify-between font-bold mt-3 pt-3 border-t mb-6">
+        <div className="flex justify-between text-neutral-900 font-medium mt-4 pt-4 border-t border-neutral-200 mb-8">
           <span>Total</span>
           <span>₹{order.totalAmount}</span>
         </div>
 
-        <h2 className="font-semibold mb-2">Shipping Address</h2>
-        <p className="text-sm text-gray-600">
+        <h2 className="text-xs uppercase tracking-widest text-neutral-500 mb-3">
+          Shipping address
+        </h2>
+        <p className="text-sm text-neutral-600 leading-relaxed">
           {order.shippingAddress.street}, {order.shippingAddress.city}<br />
           {order.shippingAddress.postalCode}, {order.shippingAddress.country}
         </p>

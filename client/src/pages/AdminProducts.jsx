@@ -33,7 +33,6 @@ const AdminProducts = () => {
     e.preventDefault();
     setMessage('');
 
-    // Building multipart form data, since we're sending a file
     const formData = new FormData();
     formData.append('name', name);
     formData.append('description', description);
@@ -46,7 +45,7 @@ const AdminProducts = () => {
       await API.post('/products', formData, {
         headers: { 'Content-Type': 'multipart/form-data' },
       });
-      setMessage('Product added!');
+      setMessage('Product added');
       resetForm();
       fetchProducts();
     } catch (err) {
@@ -64,27 +63,31 @@ const AdminProducts = () => {
   };
 
   return (
-    <div className="min-h-screen bg-gray-100 py-10 px-6">
+    <div className="min-h-screen bg-neutral-50 py-16 px-6">
       <div className="max-w-3xl mx-auto">
-        <h1 className="text-2xl font-bold mb-6">Admin - Manage Products</h1>
+        <h1 className="font-serif text-3xl text-neutral-900 mb-10 text-center">
+          Admin — manage products
+        </h1>
 
-        <form onSubmit={handleSubmit} className="bg-white p-4 rounded-lg shadow-sm mb-8">
-          <h2 className="font-semibold mb-3">Add New Product</h2>
-          {message && <p className="text-sm text-blue-600 mb-3">{message}</p>}
+        <form onSubmit={handleSubmit} className="bg-white border border-neutral-200 p-6 mb-10">
+          <h2 className="text-xs uppercase tracking-widest text-neutral-500 mb-4">
+            Add new product
+          </h2>
+          {message && <p className="text-sm text-neutral-600 mb-4">{message}</p>}
 
           <input
             type="text"
             placeholder="Name"
             value={name}
             onChange={(e) => setName(e.target.value)}
-            className="w-full border border-gray-300 p-2 rounded mb-3"
+            className="w-full border border-neutral-300 px-4 py-3 text-sm mb-3 focus:outline-none focus:border-neutral-900 transition-colors duration-300"
             required
           />
           <textarea
             placeholder="Description"
             value={description}
             onChange={(e) => setDescription(e.target.value)}
-            className="w-full border border-gray-300 p-2 rounded mb-3"
+            className="w-full border border-neutral-300 px-4 py-3 text-sm mb-3 focus:outline-none focus:border-neutral-900 transition-colors duration-300"
             required
           />
           <input
@@ -92,7 +95,7 @@ const AdminProducts = () => {
             placeholder="Price"
             value={price}
             onChange={(e) => setPrice(e.target.value)}
-            className="w-full border border-gray-300 p-2 rounded mb-3"
+            className="w-full border border-neutral-300 px-4 py-3 text-sm mb-3 focus:outline-none focus:border-neutral-900 transition-colors duration-300"
             required
           />
           <input
@@ -100,7 +103,7 @@ const AdminProducts = () => {
             placeholder="Category"
             value={category}
             onChange={(e) => setCategory(e.target.value)}
-            className="w-full border border-gray-300 p-2 rounded mb-3"
+            className="w-full border border-neutral-300 px-4 py-3 text-sm mb-3 focus:outline-none focus:border-neutral-900 transition-colors duration-300"
             required
           />
           <input
@@ -108,33 +111,49 @@ const AdminProducts = () => {
             placeholder="Stock"
             value={stock}
             onChange={(e) => setStock(e.target.value)}
-            className="w-full border border-gray-300 p-2 rounded mb-3"
+            className="w-full border border-neutral-300 px-4 py-3 text-sm mb-3 focus:outline-none focus:border-neutral-900 transition-colors duration-300"
             required
           />
           <input
             type="file"
             accept="image/*"
             onChange={(e) => setImage(e.target.files[0])}
-            className="w-full mb-4"
+            className="w-full mb-6 text-sm text-neutral-600"
             required
           />
 
-          <button type="submit" className="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600 transition">
-            Add Product
+          <button
+            type="submit"
+            className="bg-neutral-900 text-white px-8 py-3 text-xs uppercase tracking-widest hover:bg-neutral-800 transition-colors duration-300"
+          >
+            Add product
           </button>
         </form>
 
-        <h2 className="font-semibold mb-3">Existing Products</h2>
+        <h2 className="text-xs uppercase tracking-widest text-neutral-500 mb-4">
+          Existing products
+        </h2>
         {products.map((product) => (
-          <div key={product._id} className="bg-white p-4 rounded-lg shadow-sm mb-3 flex items-center gap-4">
-            <img src={product.imageUrl} alt={product.name} className="w-16 h-16 object-cover rounded" />
+          <div
+            key={product._id}
+            className="bg-white border border-neutral-200 p-5 mb-3 flex items-center gap-5"
+          >
+            <div className="w-16 h-16 bg-neutral-100 overflow-hidden flex-shrink-0">
+              <img
+                src={product.imageUrl}
+                alt={product.name}
+                className="w-full h-full object-cover"
+              />
+            </div>
             <div className="flex-1">
-              <h3 className="font-semibold">{product.name}</h3>
-              <p className="text-sm text-gray-500">₹{product.price} • Stock: {product.stock}</p>
+              <h3 className="font-serif text-base text-neutral-900">{product.name}</h3>
+              <p className="text-xs uppercase tracking-widest text-neutral-400 mt-1">
+                ₹{product.price} • Stock: {product.stock}
+              </p>
             </div>
             <button
               onClick={() => handleDelete(product._id)}
-              className="text-red-500 hover:underline text-sm"
+              className="text-xs uppercase tracking-widest text-neutral-400 hover:text-red-500 transition-colors duration-300"
             >
               Delete
             </button>

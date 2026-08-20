@@ -31,26 +31,31 @@ const Home = () => {
   const categories = [...new Set(products.map((p) => p.category))];
 
   return (
-    <div className="min-h-screen bg-gray-100 py-8 px-6">
+    <div className="min-h-screen bg-neutral-50 py-16 px-6 md:px-10">
       <div className="max-w-6xl mx-auto">
-        <h1 className="text-2xl font-bold mb-6">Shop</h1>
+        <div className="mb-12 text-center">
+          <h1 className="font-serif text-4xl text-neutral-900 mb-2">The collection</h1>
+          <p className="text-xs uppercase tracking-widest text-neutral-500">
+            Curated pieces, thoughtfully made
+          </p>
+        </div>
 
-        <div className="flex flex-col sm:flex-row gap-4 mb-6">
+        <div className="flex flex-col sm:flex-row gap-4 mb-12 max-w-2xl mx-auto">
           <input
             type="text"
             placeholder="Search products..."
             value={search}
             onChange={(e) => setSearch(e.target.value)}
-            className="flex-1 border border-gray-300 p-2 rounded focus:outline-none focus:ring-2 focus:ring-blue-400"
+            className="flex-1 border border-neutral-300 bg-white px-4 py-3 text-sm text-neutral-900 placeholder-neutral-400 focus:outline-none focus:border-neutral-900 transition-colors duration-300"
           />
 
           {categories.length > 0 && (
             <select
               value={category}
               onChange={(e) => setCategory(e.target.value)}
-              className="border border-gray-300 p-2 rounded focus:outline-none focus:ring-2 focus:ring-blue-400"
+              className="border border-neutral-300 bg-white px-4 py-3 text-sm text-neutral-900 focus:outline-none focus:border-neutral-900 transition-colors duration-300"
             >
-              <option value="">All Categories</option>
+              <option value="">All categories</option>
               {categories.map((cat) => (
                 <option key={cat} value={cat}>{cat}</option>
               ))}
@@ -59,11 +64,11 @@ const Home = () => {
         </div>
 
         {loading ? (
-          <p className="text-gray-500">Loading...</p>
+          <p className="text-center text-neutral-400 text-sm tracking-wide">Loading...</p>
         ) : products.length === 0 ? (
-          <p className="text-gray-500">No products found.</p>
+          <p className="text-center text-neutral-400 text-sm tracking-wide">No products found.</p>
         ) : (
-          <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
+          <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-8">
             {products.map((product) => (
               <ProductCard key={product._id} product={product} />
             ))}

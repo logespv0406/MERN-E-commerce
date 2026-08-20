@@ -33,55 +33,72 @@ const ProductDetail = () => {
     }
     try {
       await addToCart(product._id, quantity);
-      setMessage('Added to cart!');
+      setMessage('Added to cart');
       setTimeout(() => setMessage(''), 2000);
     } catch (err) {
       console.error(err);
     }
   };
 
-  if (!product) return <p className="text-center mt-10 text-gray-500">Loading...</p>;
+  if (!product)
+    return (
+      <p className="text-center mt-16 text-neutral-400 text-sm tracking-wide">Loading...</p>
+    );
 
   return (
-    <div className="min-h-screen bg-gray-100 py-10 px-6">
-      <div className="max-w-4xl mx-auto bg-white rounded-lg shadow-sm overflow-hidden flex flex-col md:flex-row">
-        <img
-          src={product.imageUrl}
-          alt={product.name}
-          className="w-full md:w-1/2 h-80 object-cover"
-        />
-        <div className="p-6 flex-1">
-          <h1 className="text-2xl font-bold text-gray-800 mb-2">{product.name}</h1>
-          <p className="text-sm text-gray-500 mb-4">{product.category}</p>
-          <p className="text-gray-600 mb-4">{product.description}</p>
-          <p className="text-2xl font-bold text-gray-900 mb-4">₹{product.price}</p>
+    <div className="min-h-screen bg-neutral-50 py-16 px-6">
+      <div className="max-w-4xl mx-auto bg-white border border-neutral-200 overflow-hidden flex flex-col md:flex-row">
+        <div className="w-full md:w-1/2 h-80 md:h-auto bg-neutral-100 overflow-hidden">
+          <img
+            src={product.imageUrl}
+            alt={product.name}
+            className="w-full h-full object-cover"
+          />
+        </div>
+        <div className="p-8 flex-1">
+          <h1 className="font-serif text-3xl text-neutral-900 mb-2">{product.name}</h1>
+          <p className="text-xs uppercase tracking-widest text-neutral-400 mb-6">
+            {product.category}
+          </p>
+          <p className="text-neutral-600 text-sm leading-relaxed mb-6">{product.description}</p>
+          <p className="text-2xl text-neutral-900 font-medium mb-4">₹{product.price}</p>
 
-          <p className={`text-sm mb-4 ${product.stock > 0 ? 'text-green-600' : 'text-red-500'}`}>
+          <p
+            className={`text-xs uppercase tracking-widest mb-6 ${
+              product.stock > 0 ? 'text-neutral-500' : 'text-red-500'
+            }`}
+          >
             {product.stock > 0 ? `${product.stock} in stock` : 'Out of stock'}
           </p>
 
           {product.stock > 0 && (
             <>
-              <div className="flex items-center gap-3 mb-4">
-                <label className="text-sm text-gray-600">Quantity:</label>
+              <div className="flex items-center gap-3 mb-6">
+                <label className="text-xs uppercase tracking-widest text-neutral-500">
+                  Quantity
+                </label>
                 <input
                   type="number"
                   min="1"
                   max={product.stock}
                   value={quantity}
                   onChange={(e) => setQuantity(Number(e.target.value))}
-                  className="w-20 border border-gray-300 p-2 rounded"
+                  className="w-20 border border-neutral-300 p-2 text-center text-sm focus:outline-none focus:border-neutral-900 transition-colors duration-300"
                 />
               </div>
 
               <button
                 onClick={handleAddToCart}
-                className="bg-blue-500 text-white px-6 py-2 rounded hover:bg-blue-600 transition"
+                className="bg-neutral-900 text-white px-8 py-3 text-xs uppercase tracking-widest hover:bg-neutral-800 transition-colors duration-300"
               >
-                Add to Cart
+                Add to cart
               </button>
 
-              {message && <p className="text-green-600 text-sm mt-2">{message}</p>}
+              {message && (
+                <p className="text-xs uppercase tracking-widest text-neutral-500 mt-4">
+                  {message}
+                </p>
+              )}
             </>
           )}
         </div>
