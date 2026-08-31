@@ -1,4 +1,5 @@
 import { Link } from 'react-router-dom';
+import { optimizeImage } from '../utils/imageUrl';
 
 const ProductCard = ({ product }) => {
   return (
@@ -8,8 +9,9 @@ const ProductCard = ({ product }) => {
     >
       <div className="overflow-hidden aspect-square bg-neutral-100">
         <img
-          src={product.imageUrl}
+          src={optimizeImage(product.imageUrl, 400)}
           alt={product.name}
+          loading="lazy"
           className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700"
         />
       </div>

@@ -9,9 +9,12 @@ const Home = () => {
   const [category, setCategory] = useState('');
 
   useEffect(() => {
+  const timer = setTimeout(() => {
     fetchProducts();
-  }, [search, category]);
+  }, 400);
 
+  return () => clearTimeout(timer);
+}, [search, category]);
   const fetchProducts = async () => {
     try {
       setLoading(true);

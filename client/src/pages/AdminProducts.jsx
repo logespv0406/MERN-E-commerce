@@ -1,5 +1,6 @@
 import { useState, useEffect } from 'react';
 import API from '../api/axios';
+import { optimizeImage } from '../utils/imageUrl';
 
 const AdminProducts = () => {
   const [products, setProducts] = useState([]);
@@ -140,8 +141,9 @@ const AdminProducts = () => {
           >
             <div className="w-16 h-16 bg-neutral-100 overflow-hidden flex-shrink-0">
               <img
-                src={product.imageUrl}
+                src={optimizeImage(product.imageUrl, 100)}
                 alt={product.name}
+                loading="lazy"
                 className="w-full h-full object-cover"
               />
             </div>

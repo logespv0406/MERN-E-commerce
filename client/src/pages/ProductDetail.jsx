@@ -3,6 +3,7 @@ import { useParams, useNavigate } from 'react-router-dom';
 import API from '../api/axios';
 import { useAuth } from '../context/AuthContext';
 import { useCart } from '../context/CartContext';
+import { optimizeImage } from '../utils/imageUrl';
 
 const ProductDetail = () => {
   const { id } = useParams();
@@ -50,7 +51,7 @@ const ProductDetail = () => {
       <div className="max-w-4xl mx-auto bg-white border border-neutral-200 overflow-hidden flex flex-col md:flex-row">
         <div className="w-full md:w-1/2 h-80 md:h-auto bg-neutral-100 overflow-hidden">
           <img
-            src={product.imageUrl}
+            src={optimizeImage(product.imageUrl, 600)}
             alt={product.name}
             className="w-full h-full object-cover"
           />

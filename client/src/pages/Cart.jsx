@@ -1,5 +1,6 @@
 import { Link, useNavigate } from 'react-router-dom';
 import { useCart } from '../context/CartContext';
+import { optimizeImage } from '../utils/imageUrl';
 
 const Cart = () => {
   const { cart, updateQuantity, removeFromCart } = useCart();
@@ -36,8 +37,9 @@ const Cart = () => {
           >
             <div className="w-20 h-20 bg-neutral-100 overflow-hidden flex-shrink-0">
               <img
-                src={item.product.imageUrl}
+                src={optimizeImage(item.product.imageUrl, 150)}
                 alt={item.product.name}
+                loading="lazy"
                 className="w-full h-full object-cover"
               />
             </div>

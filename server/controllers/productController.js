@@ -13,7 +13,7 @@ export const getProducts = async (req, res) => {
       query.category = category;
     }
 
-    const products = await Product.find(query).sort({ createdAt: -1 });
+    const products = await Product.find(query).sort({ createdAt: -1 }).lean();
     res.json(products);
   } catch (error) {
     res.status(500).json({ message: error.message });
@@ -23,7 +23,7 @@ export const getProducts = async (req, res) => {
 // GET single product by id
 export const getProductById = async (req, res) => {
   try {
-    const product = await Product.findById(req.params.id);
+    const product = await Product.findById(req.params.id).lean();
     if (!product) {
       return res.status(404).json({ message: 'Product not found' });
     }
