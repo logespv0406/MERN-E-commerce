@@ -16,8 +16,10 @@ const Checkout = () => {
   const [loading, setLoading] = useState(false);
   const navigate = useNavigate();
 
-  const total = cart.items.reduce(
-    (sum, item) => sum + item.product.price * item.quantity,
+  const validItems = (cart?.items || []).filter((item) => item?.product);
+
+  const total = validItems.reduce(
+    (sum, item) => sum + (item.product.price || 0) * (item.quantity || 1),
     0
   );
 
@@ -95,7 +97,7 @@ const Checkout = () => {
     }
   };
 
-  if (cart.items.length === 0) {
+  if (validItems.length === 0) {
     return (
       <div className="min-h-screen bg-neutral-50 py-20 px-6 text-center">
         <p className="text-neutral-400 text-sm tracking-wide">Your cart is empty.</p>
@@ -112,7 +114,7 @@ const Checkout = () => {
           <h2 className="text-xs uppercase tracking-widest text-neutral-500 mb-4">
             Order summary
           </h2>
-          {cart.items.map((item) => (
+          {validItems.map((item) => (
             <div
               key={item.product._id}
               className="flex justify-between text-sm text-neutral-700 mb-2"

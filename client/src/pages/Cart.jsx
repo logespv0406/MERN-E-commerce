@@ -6,12 +6,14 @@ const Cart = () => {
   const { cart, updateQuantity, removeFromCart } = useCart();
   const navigate = useNavigate();
 
-  const total = cart.items.reduce(
-    (sum, item) => sum + item.product.price * item.quantity,
+  const validItems = (cart?.items || []).filter((item) => item?.product);
+
+  const total = validItems.reduce(
+    (sum, item) => sum + (item.product.price || 0) * (item.quantity || 1),
     0
   );
 
-  if (cart.items.length === 0) {
+  if (validItems.length === 0) {
     return (
       <div className="min-h-screen bg-neutral-50 py-20 px-6 text-center">
         <p className="text-neutral-400 text-sm tracking-wide mb-4">Your cart is empty.</p>
@@ -30,7 +32,7 @@ const Cart = () => {
       <div className="max-w-2xl mx-auto">
         <h1 className="font-serif text-3xl text-neutral-900 mb-10 text-center">Your cart</h1>
 
-        {cart.items.map((item) => (
+        {validItems.map((item) => (
           <div
             key={item.product._id}
             className="bg-white border border-neutral-200 p-5 mb-3 flex items-center gap-5"

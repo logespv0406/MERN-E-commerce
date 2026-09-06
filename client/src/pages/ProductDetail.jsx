@@ -27,17 +27,26 @@ const ProductDetail = () => {
     }
   };
 
+  const [adding, setAdding] = useState(false);
+  const [errorMsg, setErrorMsg] = useState('');
+
   const handleAddToCart = async () => {
     if (!user) {
       navigate('/login');
       return;
     }
     try {
+      setAdding(true);
+      setErrorMsg('');
       await addToCart(product._id, quantity);
       setMessage('Added to cart');
-      setTimeout(() => setMessage(''), 2000);
+      setTimeout(() => setMessage(''), 2500);
     } catch (err) {
       console.error(err);
+      setErrorMsg(err.response?.data?.message || 'Failed to add item to cart');
+      setTimeout(() => setErrorMsg(''), 3000);
+    } finally {
+      setAdding(false);
     }
   };
 
@@ -90,14 +99,21 @@ const ProductDetail = () => {
 
               <button
                 onClick={handleAddToCart}
-                className="bg-neutral-900 text-white px-8 py-3 text-xs uppercase tracking-widest hover:bg-neutral-800 transition-colors duration-300"
+                disabled={adding}
+                className="bg-neutral-900 text-white px-8 py-3 text-xs uppercase tracking-widest hover:bg-neutral-800 transition-colors duration-300 disabled:opacity-50"
               >
-                Add to cart
+                {adding ? 'Adding...' : 'Add to cart'}
               </button>
 
               {message && (
-                <p className="text-xs uppercase tracking-widest text-neutral-500 mt-4">
-                  {message}
+                <p className="text-xs uppercase tracking-widest text-emerald-600 mt-4 font-medium">
+                  ✓ {message}
+                </p>
+              )}
+
+              {errorMsg && (
+                <p className="text-xs uppercase tracking-widest text-red-500 mt-4">
+                  {errorMsg}
                 </p>
               )}
             </>
