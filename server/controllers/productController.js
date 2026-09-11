@@ -1,4 +1,5 @@
 import Product from '../models/Product.js';
+import { cloudinary } from '../config/cloudinary.js';
 
 // GET all products (public, anyone can view)
 export const getProducts = async (req, res) => {
@@ -36,19 +37,31 @@ export const getProductById = async (req, res) => {
 // CREATE product (admin only)
 export const createProduct = async (req, res) => {
   try {
-    const { name, description, price, category, stock } = req.body;
+    const { name, description, price, category, stock, imageUrl } = req.body;
 
-    if (!req.file) {
-      return res.status(400).json({ message: 'Product image is required' });
+    let finalImageUrl = null;
+
+    if (req.file) {
+      finalImageUrl = req.file.path; // Cloudinary URL from Multer file upload
+    } else if (imageUrl && typeof imageUrl === 'string' && imageUrl.trim()) {
+      // Remote URL provided -> upload to Cloudinary so it's stored in user's Cloudinary account
+      const uploadRes = await cloudinary.uploader.upload(imageUrl.trim(), {
+        folder: 'ecommerce-products',
+      });
+      finalImageUrl = uploadRes.secure_url;
+    }
+
+    if (!finalImageUrl) {
+      return res.status(400).json({ message: 'Product image file or valid image URL is required' });
     }
 
     const product = await Product.create({
       name,
       description,
-      price,
+      price: Number(price),
       category,
-      stock,
-      imageUrl: req.file.path, // Cloudinary URL
+      stock: Number(stock),
+      imageUrl: finalImageUrl,
       createdBy: req.user._id,
     });
 
@@ -74,6 +87,11 @@ export const updateProduct = async (req, res) => {
 
     if (req.file) {
       product.imageUrl = req.file.path;
+    } else if (req.body.imageUrl && typeof req.body.imageUrl === 'string' && req.body.imageUrl.trim() && req.body.imageUrl.trim() !== product.imageUrl) {
+      const uploadRes = await cloudinary.uploader.upload(req.body.imageUrl.trim(), {
+        folder: 'ecommerce-products',
+      });
+      product.imageUrl = uploadRes.secure_url;
     }
 
     const updatedProduct = await product.save();
