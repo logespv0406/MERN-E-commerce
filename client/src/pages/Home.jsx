@@ -4,17 +4,32 @@ import ProductCard from '../components/ProductCard';
 
 const Home = () => {
   const [products, setProducts] = useState([]);
+  const [categories, setCategories] = useState([]);
   const [loading, setLoading] = useState(true);
   const [search, setSearch] = useState('');
   const [category, setCategory] = useState('');
 
   useEffect(() => {
-  const timer = setTimeout(() => {
-    fetchProducts();
-  }, 400);
+    fetchCategories();
+  }, []);
 
-  return () => clearTimeout(timer);
-}, [search, category]);
+  const fetchCategories = async () => {
+    try {
+      const res = await API.get('/products/categories');
+      setCategories(res.data || []);
+    } catch (err) {
+      console.error('Failed to fetch categories:', err);
+    }
+  };
+
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      fetchProducts();
+    }, 400);
+
+    return () => clearTimeout(timer);
+  }, [search, category]);
+
   const fetchProducts = async () => {
     try {
       setLoading(true);
@@ -30,8 +45,6 @@ const Home = () => {
       setLoading(false);
     }
   };
-
-  const categories = [...new Set(products.map((p) => p.category))];
 
   return (
     <div className="min-h-screen bg-neutral-50 py-16 px-6 md:px-10">

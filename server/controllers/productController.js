@@ -21,6 +21,16 @@ export const getProducts = async (req, res) => {
   }
 };
 
+// GET all distinct categories
+export const getCategories = async (req, res) => {
+  try {
+    const categories = await Product.distinct('category');
+    res.json(categories.filter(Boolean).sort());
+  } catch (error) {
+    res.status(500).json({ message: error.message });
+  }
+};
+
 // GET single product by id
 export const getProductById = async (req, res) => {
   try {
